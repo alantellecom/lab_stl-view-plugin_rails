@@ -1,0 +1,102 @@
+<div class="container">
+        
+        <div style="margin-top: 20px;" class="row justify-content-md-center">
+            <div class="col col-lg-4">
+                <div class="input-group mb-3">
+                    <div class="custom-file">
+                        <input type="file"  class="custom-file-input" type="file"
+                            onchange='stl_viewer.add_model({id:1, local_file:this.files[0]});' accept="*.*"
+                            aria-describedby="inputGroupFileAddon01">
+                        <label class="custom-file-label"  style="text-align:left; for="inputGroupFile01">Selecione o arquivo</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 20px;" class="row justify-content-md-center">
+            <div class="col col-lg-5 border rounded" id="stl_cont"
+                style="width:100%;height:350px;background-color: white;">
+
+            </div>
+        </div>
+
+        <form>
+            <div style="margin-top: 10px;" class="form-row justify-content-md-center">
+
+                <div class="form-group col-md-3">
+                    <label for="joiaVolume">Volume</label>
+                    <span readonly type="text" class="form-control" id="joiaVolume"></span>
+                </div>
+            </div>
+
+            <div class="form-row justify-content-md-center">
+
+                <div class="form-group col-md-2">
+                    <label for="inputState">Material</label>
+                    <select id="selectDensidade" onchange="calc()" class="form-control">
+                        <option selected value="0"></option>
+                        <option id="10" value="10">Prata</option>
+                        <option id="20" value="20">Ouro</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group col-md-2">
+                    <label for="inputZip">Total</label>
+                    <span readonly type="text" value="R$ 0" class="form-control" id="inputTotal"></span>
+                </div>
+            </div>
+        </form>
+</div>       
+        
+        <script src="/assets/stl_viewer.min.js"></script>
+            
+        <script>
+             var stl_viewer = new StlViewer
+            (
+                document.getElementById("stl_cont"),
+                {
+                    all_loaded_callback() {
+                        document.getElementById("joiaVolume").innerHTML = `${stl_viewer.get_model_info(1).volume}`;
+                        document.getElementById("selectDensidade").selectedIndex = 0;
+                    }
+                }
+            );
+        
+        function calc() {
+
+            let formatter = new Intl.NumberFormat([], {
+                style: 'currency',
+                currency: 'BRL'
+            })
+
+            if (stl_viewer.get_model_info(1).volume == null) {
+
+                document.getElementById("inputTotal").innerHTML = `${formatter.format(valorTotal)}`;
+
+            } else {
+
+                if (document.getElementById("selectDensidade").value == 10) {
+
+                    this.valorTotal = (stl_viewer.get_model_info(1).volume * document.getElementById("selectDensidade").value) * 50;
+
+                } else {
+
+                    this.valorTotal = (stl_viewer.get_model_info(1).volume * document.getElementById("selectDensidade").value) * 100;
+
+                }
+
+                console.log(formatter.format(this.valorTotal));
+                document.getElementById("inputTotal").innerHTML = `${formatter.format(this.valorTotal)}`;
+            }
+        }
+
+   
+        </script>
+        
+
+
+
+
+
+		
